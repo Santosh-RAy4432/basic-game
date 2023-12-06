@@ -5,6 +5,7 @@ import Timechanger from './components/Timechanger';
 function App() {
   return (
     <>
+   
     <Player />
   <div id='challenges'>
     <Timechanger title='easy' targetTime={1}/>
