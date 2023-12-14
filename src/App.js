@@ -1,11 +1,12 @@
 import './App.css';
+
 import Player from './components/Player';
 import Timechanger from './components/Timechanger';
 
 function App() {
   return (
     <>
-   
+  
     <Player />
   <div id='challenges'>
     <Timechanger title='easy' targetTime={1}/>

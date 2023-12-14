@@ -3,38 +3,56 @@ import ResultModel from './ResultModel.jsx';
 export default function Timechanger({title, targetTime}){
     const timer=useRef();
     const dialog = useRef();
-    const[timeStarted,setTimeStart]=useState(false);
-    const[timeExpired,setTimeExpired]=useState(false);
-    function handleStart(){
-        setTimeout(()=>{
-            setTimeExpired(true);
-            dialog.current.showModal();
-        },
-        targetTime*1000);
-        setTimeStart(true);
+    const [time, setTime] = useState(targetTime*1000);
+    const timeActive=time > 0 && time < targetTime*1000;
+    // const[timeStarted,setTimeStart]=useState(false);
+    // const[timeExpired,setTimeExpired]=useState(false);
+
+    if(time<=0){
+        clearInterval(timer.current);
+        setTime(targetTime*1000);
+        dialog.current.open();
     }
+function handleReset(){
+    setTime(targetTime * 1000);
+}
+
+    function handleStart(){
+        timer.current=setInterval(()=>{
+            setTime(prevTime=>prevTime-10);
+
+        },10);
+        }
+       
+    
     function handleStop(){
-        clearTimeout(timer.current);
+        clearInterval(timer.current);
+        
+        dialog.current.open();
 
     }
     return(
         <>
-     <ResultModel ref={dialog} targetTime={targetTime} result='lost'/>
+     <ResultModel ref={dialog} 
+     targetTime={targetTime} 
+      remainTime={time}
+      onReset={handleReset}
+      />
 
 <section className="challenge">
 <h2>{title}</h2>
 
 <p className="challege-time">
-    {targetTime}second{targetTime>1?'s':''}
+    {targetTime} second {targetTime> 1?'s':''}
 </p>
 <p>
-    <button onClick={timeStarted? handleStop:handleStart}>
-        {timeStarted?'stop':'start'} challenge
+    <button onClick={timeActive? handleStop:handleStart}>
+        {timeActive?'stop':'start'} challenge
     </button >
 </p>
-<p className={timeStarted?'active':undefined}>
-    {timeStarted?'time is running...':'timer is inactive'}</p>
+<p className={timeActive?'active':undefined}>
+    {timeActive?'time is running...':'timer is inactive'}</p>
 </section>
 </>
     );
-}
+    }
